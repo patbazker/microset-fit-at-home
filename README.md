@@ -50,8 +50,19 @@ npm run preview
 
 ## Déploiement
 
-Cloudflare Pages auto-déploie `main` → https://microset.emergence.md.
-Build command : `npm run build` · Output : `dist/`
+Déployé sur **Cloudflare Workers (Assets)** — pas Pages — connecté au repo
+GitHub. Chaque push sur `main` déclenche un build + déploiement automatique.
+
+- Project name CF : `microset-fit-at-home`
+- Framework détecté : Vite
+- Build command : `npm run build`
+- Output directory : `dist/`
+- SPA fallback : géré nativement par `not_found_handling: "single-page-application"`
+  (auto-injecté par CF dans `dist/wrangler.json` au build, **ne pas committer
+  de `_redirects` ni de `wrangler.jsonc` à la racine** — CF les détecte comme
+  un conflit Workers/Pages).
+- Domaine custom : `microset.emergence.md` (DNS géré via le compte CF qui
+  héberge `emergence.md`).
 
 ## Inspirations (recherche)
 
