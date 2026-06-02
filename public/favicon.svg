@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff5e3a"/>
+      <stop offset="1" stop-color="#ffaa3a"/>
+    </linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#131922"/>
+      <stop offset="1" stop-color="#0a0e14"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14.08" fill="url(#bg)"/>
+  <g transform="translate(0, 0)">
+    <!-- Three rings -->
+    <g transform="translate(32, 32)">
+      <circle r="23.04" fill="none" stroke="#ff5e3a44" stroke-width="3.84"/>
+      <circle r="17.28" fill="none" stroke="#3ad1ff44" stroke-width="3.84"/>
+      <circle r="11.52" fill="none" stroke="#a06bff44" stroke-width="3.84"/>
+      <g transform="rotate(-90)">
+        <circle r="23.04" fill="none" stroke="#ff5e3a" stroke-width="3.84" stroke-linecap="round"
+                stroke-dasharray="108.57344210806326 144.76458947741767"/>
+        <circle r="17.28" fill="none" stroke="#3ad1ff" stroke-width="3.84" stroke-linecap="round"
+                stroke-dasharray="65.14406526483795 108.57344210806326"/>
+        <circle r="11.52" fill="none" stroke="#a06bff" stroke-width="3.84" stroke-linecap="round"
+                stroke-dasharray="61.52495052790251 72.38229473870884"/>
+      </g>
+    </g>
+  </g>
+</svg>
