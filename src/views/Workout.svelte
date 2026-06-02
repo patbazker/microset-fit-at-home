@@ -8,6 +8,7 @@
   import type { Session, LoggedExercise, PatternId } from '../lib/types';
   import confetti from 'canvas-confetti';
   import type { StreakMilestone } from '../lib/streak';
+  import ExerciseInfo from '../components/ExerciseInfo.svelte';
 
   interface Props {
     onExit: () => void;
@@ -25,8 +26,14 @@
   let logged: LoggedSetTmp[] = $state([]);
   let pendingReps = $state(0);
   let paused = $state(false);
+  let infoOpen = $state(false);
 
   const current = $derived(phases[idx]);
+  const currentExerciseId = $derived(
+    current && (current.kind === 'work-reps' || current.kind === 'work-hold' || current.kind === 'work-time')
+      ? current.exerciseId
+      : null
+  );
   const progress = $derived(phases.length > 0 ? idx / (phases.length - 1) : 0);
 
   onMount(() => {
@@ -196,7 +203,12 @@
   <div class="workout-head">
     <button class="btn btn-ghost" onclick={quit}>✕</button>
     <div class="muted small">{idx + 1} / {phases.length}</div>
-    <button class="btn btn-ghost" onclick={togglePause}>{paused ? '▶' : '⏸'}</button>
+    <div class="row" style="gap: 6px;">
+      {#if currentExerciseId}
+        <button class="btn btn-ghost" onclick={() => { paused = true; infoOpen = true; }} aria-label="Info exercice">ⓘ</button>
+      {/if}
+      <button class="btn btn-ghost" onclick={togglePause}>{paused ? '▶' : '⏸'}</button>
+    </div>
   </div>
 
   <div class="progress-bar">
@@ -214,7 +226,7 @@
 
     {:else if current?.kind === 'work-reps'}
       <div class="exercise-emoji scale-in">{current.emoji}</div>
-      <div class="exercise-name">{current.title}</div>
+      <button class="exercise-name name-btn" onclick={() => { paused = true; infoOpen = true; }}>{current.title} <span class="info-dot">ⓘ</span></button>
       <div class="exercise-target">Série {current.setIndex} / {current.setTotal} · objectif {current.targetReps} reps</div>
 
       <div class="reps-control">
@@ -231,7 +243,7 @@
 
     {:else if current?.kind === 'work-hold'}
       <div class="exercise-emoji scale-in">{current.emoji}</div>
-      <div class="exercise-name">{current.title}</div>
+      <button class="exercise-name name-btn" onclick={() => { paused = true; infoOpen = true; }}>{current.title} <span class="info-dot">ⓘ</span></button>
       <div class="exercise-target">Tiens · série {current.setIndex} / {current.setTotal}</div>
       <div class="timer-big" class:hot={secondsLeft <= 3}>{fmtTime(secondsLeft)}</div>
       {#if current.cues?.length}
@@ -242,7 +254,7 @@
 
     {:else if current?.kind === 'work-time'}
       <div class="exercise-emoji scale-in">{current.emoji}</div>
-      <div class="exercise-name">{current.title}</div>
+      <button class="exercise-name name-btn" onclick={() => { paused = true; infoOpen = true; }}>{current.title} <span class="info-dot">ⓘ</span></button>
       <div class="exercise-target">{current.setIndex} / {current.setTotal}</div>
       <div class="timer-big" class:hot={secondsLeft <= 3}>{fmtTime(secondsLeft)}</div>
       {#if current.cues?.length}
@@ -271,6 +283,10 @@
     {/if}
   </div>
 </div>
+
+{#if infoOpen && currentExerciseId}
+  <ExerciseInfo exerciseId={currentExerciseId} onClose={() => { infoOpen = false; }} />
+{/if}
 
 <style>
   .progress-bar {
@@ -313,5 +329,24 @@
     font-variant-numeric: tabular-nums;
     min-width: 80px;
     text-align: center;
+  }
+  .name-btn {
+    background: transparent;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    padding: 4px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s ease;
+  }
+  .name-btn:active { background: var(--bg-elev-2); }
+  .info-dot {
+    color: var(--accent-2);
+    font-size: 1rem;
+    opacity: 0.8;
   }
 </style>
