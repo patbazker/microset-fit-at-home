@@ -2,8 +2,10 @@
   import { appData, setLevel } from '../lib/store';
   import { LADDERS, exerciseAtLevel } from '../lib/exercises';
   import type { PatternId } from '../lib/types';
+  import ExerciseInfo from '../components/ExerciseInfo.svelte';
 
   const data = $derived($appData);
+  let infoExId: string | null = $state(null);
 
   const PATTERN_LABELS: Record<PatternId, { label: string; emoji: string; color: string }> = {
     'push-h': { label: 'Push horizontal', emoji: '💪', color: 'var(--strength)' },
@@ -71,7 +73,7 @@
                 <strong>{meta.label}</strong>
                 <span class="tag">Niv. {prog.level}/12</span>
               </div>
-              <div class="muted small">{ex.emoji} {ex.name}</div>
+              <button class="link-row" onclick={() => infoExId = ex.id}>{ex.emoji} {ex.name} <span class="info-dot">ⓘ</span></button>
               {#if prog.bestReps}
                 <div class="tiny" style="color: var(--success)">PR {prog.bestReps} reps</div>
               {/if}
@@ -110,6 +112,10 @@
   </div>
 </div>
 
+{#if infoExId}
+  <ExerciseInfo exerciseId={infoExId} onClose={() => (infoExId = null)} />
+{/if}
+
 <style>
   .pattern-row { padding: 12px 0; border-bottom: 1px solid var(--border); }
   .pattern-row:last-child { border-bottom: 0; }
@@ -124,4 +130,18 @@
     border-radius: 2px;
     transition: background 0.3s ease;
   }
+  .link-row {
+    background: transparent;
+    border: 0;
+    color: var(--fg-dim);
+    font-size: 0.86rem;
+    padding: 2px 0;
+    text-align: left;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .link-row:hover { color: var(--fg); }
+  .info-dot { color: var(--accent-2); opacity: 0.75; }
 </style>
